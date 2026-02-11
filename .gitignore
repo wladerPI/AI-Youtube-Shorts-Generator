@@ -1,0 +1,28 @@
+# Python-related
+*.pyc
+**/__pycache__/
+
+# Vídeos e arquivos grandes
+input/
+output/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+
+# Ambiente virtual Python
+venv/
+venv311/
+.venv/
+env/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+
+# Arquivos temporários
+*.log
+.DS_Store
+Thumbs.db

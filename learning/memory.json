@@ -1,0 +1,112 @@
+[
+  {
+    "timestamp": "2026-01-22T03:51:57.120887",
+    "viral_score": 10,
+    "retention_score": 14,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " See you soon!",
+    "decision": "RERENDER",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-22T03:54:23.263145",
+    "viral_score": 10,
+    "retention_score": 13,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " what's going on here?",
+    "decision": "RERENDER",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-22T03:57:00.739424",
+    "viral_score": 10,
+    "retention_score": 13,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " the first part of the mission of this mission,",
+    "decision": "RERENDER",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-25T10:13:50.094986",
+    "viral_score": 0,
+    "retention_score": 14,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " the",
+    "decision": "DESCARTADO",
+    "confidence": 85
+  },
+  {
+    "timestamp": "2026-01-25T10:15:40.237045",
+    "viral_score": 10,
+    "retention_score": 14,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " Yes, I came from a girl",
+    "decision": "DESCARTADO",
+    "confidence": 65
+  },
+  {
+    "timestamp": "2026-01-27T02:47:30.713027",
+    "viral_score": 20,
+    "retention_score": 4,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " if you want to play the playing game, if you enjoy it, or miss out it, if you want to play it a little bit, then you can go down.",
+    "decision": "DESCARTADO",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-27T04:58:04.215715",
+    "viral_score": 20,
+    "retention_score": 4,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " how are you doing ?",
+    "decision": "DESCARTADO",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-27T04:58:49.354179",
+    "viral_score": 20,
+    "retention_score": 4,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " I'm TTS, Womu He!",
+    "decision": "DESCARTADO",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-27T04:59:52.344259",
+    "viral_score": 10,
+    "retention_score": 5,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": " Don't they map us in the center and you're right?",
+    "decision": "DESCARTADO",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-27T06:19:02.171645",
+    "viral_score": 20,
+    "retention_score": 14,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": "aproximadamente em setembro de 2024, e lembrando galera, nós até pode ser maluco, mas nós é bem organizado aqui no canal sempre quando você vê um vídeo,",
+    "decision": "DESCARTADO",
+    "confidence": 70
+  },
+  {
+    "timestamp": "2026-01-27T06:23:50.359675",
+    "viral_score": 0,
+    "retention_score": 14,
+    "drop_risk": "alto",
+    "stability": 0,
+    "reason": "Não tem nada!",
+    "decision": "DESCARTADO",
+    "confidence": 70
+  }
+]
