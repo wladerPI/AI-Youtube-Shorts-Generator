@@ -25,4 +25,4 @@ __pycache__/
 # Arquivos temporários
 *.log
 .DS_Store
-Thumbs.db
+Thumbs.db.env 
