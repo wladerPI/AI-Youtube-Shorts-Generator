@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-02-14T00:00:00",
+  "total_reviews": 0,
+  "approved_count": 0,
+  "rejected_count": 0,
+  "favorite_phrases": [],
+  "avoid_phrases": [],
+  "favorite_reasons": [],
+  "optimal_duration": {
+    "min": 45,
+    "max": 120
+  },
+  "feedback_history": [],
+  "notes": "Este arquivo será atualizado automaticamente conforme você revisa os shorts gerados. O sistema aprenderá suas preferências e melhorará a cada execução."
+}

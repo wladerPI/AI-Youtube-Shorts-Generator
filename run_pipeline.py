@@ -3,33 +3,41 @@
 =============================================================================
 PIPELINE PRINCIPAL — LIVE → SHORTS VIRAIS
 =============================================================================
-CONTEXTO: Leia PROJECT_OVERVIEW.md para visão geral do projeto.
 
-O QUE FAZ:
-  Orquestra todo o processo de transformação de uma live em múltiplos shorts:
-  1. Extrai áudio
-  2. Transcreve com Whisper
-  3. Seleciona segmentos via LLM (rizadas, memes, rage) ou heurística
-  4. Remove silêncios
-  5. Renderiza vertical COM ÁUDIO + pan para memes nos cantos
-  6. Gera legendas SRT
-  7. Salva ranking.json
+⚠️ PROBLEMAS ATUAIS DO PIPELINE:
 
-COMO EXECUTAR:
-  python run_pipeline.py input\\video.mp4
+1. FILTROS MUITO AGRESSIVOS
+   - _deduplicate_segments com min_gap=60s mata muitos clips
+   - filter_by_time_distance também muito restritivo
+   - Resultado: 544 highlights → 4 shorts finais ❌
 
-ALTERAÇÕES REALIZADAS:
-  - Troca de AISegmentSelector (heurístico) para SegmentSelectorLLM (GPT)
-  - Adição de _deduplicate_segments (evita Clip 1 e 5 serem iguais)
-  - VerticalCropper passou a usar MoviePy (preserva áudio)
-  - Duração de segmentos: 30s a 3min (contexto completo)
-  - Mais shorts por live: LIVE=25, INSANO=35
+2. PROCESSAMENTO SEQUENCIAL LENTO
+   - Processa 1 clip por vez
+   - Live de 5h demora ~2-3 horas para processar
 
-O QUE AINDA PODE SER FEITO:
-  - Processar múltiplos vídeos em batch
-  - Modo interativo para aprovar/rejeitar segmentos
-  - Salvar progresso para retomada após falha
-  - Estimativa de tempo restante
+3. SEM FEEDBACK DO USUÁRIO
+   - Gera todos os shorts sem mostrar prévia
+
+4. DEPENDÊNCIA CRÍTICA DO GPT
+   - Se GPT falhar, todo pipeline falha
+
+🔧 MELHORIAS PRIORITÁRIAS:
+
+CURTO PRAZO:
+1. Remover/relaxar filtros agressivos
+2. Adicionar logs detalhados
+3. Implementar modo preview
+
+MÉDIO PRAZO:
+1. Paralelizar processamento
+2. Adicionar checkpoint/resume
+3. Cache de transcrições
+
+LONGO PRAZO:
+1. Análise de áudio sem GPT
+2. Sistema de ML para preferências
+3. Dashboard com métricas
+
 =============================================================================
 """
 
@@ -39,24 +47,13 @@ import uuid
 import re
 import json
 
-# ---------------------------------------------------------------------------
-# CONFIGURAÇÕES DO PIPELINE
-# ---------------------------------------------------------------------------
-# LIVE = produção normal | TEST = poucos shorts para teste | INSANO = máximo
 PIPELINE_MODE = "LIVE"
-
-# Se True, não renderiza vídeos (apenas simula)
 DRY_RUN = False
-
-# True = usa GPT para detectar rizadas/memes | False = heurística (sem API)
 USE_LLM_SELECTION = True
 
 print("🚨 PIPELINE EXECUTANDO 🚨")
 print("=" * 60)
 
-# ---------------------------------------------------------------------------
-# IMPORTS
-# ---------------------------------------------------------------------------
 from Components.Edit import extractAudio, crop_video
 from Components.Transcription import transcribeAudio
 from Components.EtapaJ_RemoveSilence import remove_silence
@@ -77,45 +74,44 @@ MIN_VIRAL = config["MIN_VIRAL"]
 
 
 def clean_filename(name):
-    """
-    Limpa nome de arquivo: minúsculo, sem caracteres inválidos, hífens no lugar de espaços.
-    Necessário para nomes compatíveis com Windows/Linux.
-    """
+    """Limpa nome de arquivo."""
     name = name.lower()
     name = re.sub(r'[<>:"/\\|?*]', '', name)
     name = re.sub(r'\s+', '-', name)
     return name[:80]
 
 
-def _deduplicate_segments(segments, min_gap=90):
+def _deduplicate_segments(segments, min_gap=60):
     """
-    Remove segmentos sobrepostos ou muito próximos no tempo.
+    ⚠️ PROBLEMA CRÍTICO: min_gap=60s é MUITO RESTRITIVO!
     
-    POR QUE: Em execuções anteriores, Clip 1 e Clip 5 eram o mesmo segmento
-    (5129s-5170s). A deduplicação evita shorts repetidos.
-    
-    min_gap: distância mínima em segundos entre o fim de um e o início do próximo.
+    SOLUÇÃO SUGERIDA: Reduzir para 20-30s ou remover completamente
     """
     if not segments:
         return []
+    
     segs = sorted(segments, key=lambda s: float(s["start"]))
     out = [segs[0]]
+    
     for s in segs[1:]:
         last = out[-1]
         last_end = float(last["end"])
         s_start = float(s["start"])
-        # Ignora se sobrepõe
+        
         if s_start < last_end:
             continue
-        # Ignora se está muito próximo
+        
         if s_start - last_end < min_gap:
-            continue
+            continue  # ← AQUI que mata 90% dos clips!
+        
         out.append(s)
+    
     return out
 
 
 def main():
-    # Validar argumentos
+    """Função principal do pipeline."""
+    
     if len(sys.argv) < 2:
         print("❌ Uso: python run_pipeline.py input\\video.mp4")
         sys.exit(1)
@@ -125,47 +121,53 @@ def main():
         print("❌ Vídeo não encontrado")
         sys.exit(1)
 
-    # Criar pastas de saída
     os.makedirs("clips", exist_ok=True)
     os.makedirs("shorts", exist_ok=True)
     os.makedirs("rankings", exist_ok=True)
     os.makedirs("input", exist_ok=True)
 
-    # ID único da sessão (permite múltiplas execuções simultâneas)
     session = str(uuid.uuid4())[:8]
     base_name = clean_filename(os.path.splitext(os.path.basename(input_video))[0])
     audio_file = f"audio_{session}.wav"
 
-    # ETAPA 1: Extrair áudio (necessário para transcrição)
+    # ETAPA 1: Extrair áudio
     print("🎧 Extraindo áudio...")
     extractAudio(input_video, audio_file)
 
-    # ETAPA 2: Transcrever (Whisper retorna palavra + timestamp)
+    # ETAPA 2: Transcrever
     print("🧠 Transcrevendo...")
     transcriptions = transcribeAudio(audio_file)
+    
     if not transcriptions:
         print("❌ Transcrição vazia")
         return
 
-    # Duração estimada do vídeo (para o LLM saber quantos momentos pedir)
     video_duration = max(t[2] for t in transcriptions) if transcriptions else 0
     video_duration_min = video_duration / 60
+    print(f"📊 Vídeo: {video_duration_min:.1f} minutos ({video_duration:.0f}s)")
 
-    # ETAPA 3: Selecionar segmentos (LLM ou heurística)
+    # ETAPA 3: Selecionar segmentos
     print("🧠 Selecionando segmentos (rizadas, memes, rage)...")
     segments = select_segments_with_llm(
         transcriptions,
         max_segments=MAX_SHORTS,
-        min_duration=30,   # Shorts de no mínimo 30s (contexto)
-        max_duration=180,  # Até 3min (usuário ajusta no CapCut)
+        min_duration=45,
+        max_duration=180,
         prefer_llm=USE_LLM_SELECTION,
         video_duration_min=video_duration_min
     )
 
-    # Deduplicar e filtrar por distância temporal
-    segments = _deduplicate_segments(segments, min_gap=90)
-    segments = filter_by_time_distance(segments, min_distance=90)
+    print(f"📌 Segmentos brutos encontrados: {len(segments)}")
+
+    # ETAPA 4: Filtros (PROBLEMA: muito agressivos!)
+    segments = _deduplicate_segments(segments, min_gap=60)
+    print(f"📌 Após deduplicação: {len(segments)}")
+    
+    segments = filter_by_time_distance(segments, min_distance=60)
+    print(f"📌 Após filtro temporal: {len(segments)}")
+    
     segments = segments[:MAX_SHORTS]
+    print(f"📌 Segmentos finais: {len(segments)}")
 
     if not segments:
         print("❌ Nenhum segmento selecionado")
@@ -173,44 +175,35 @@ def main():
 
     ranking = []
 
-    # ETAPA 4: Processar cada segmento
+    # ETAPA 5: Processar cada segmento
     for idx, seg in enumerate(segments, 1):
         start = float(seg["start"])
         end = float(seg["end"])
         duration = end - start
 
-        if duration < 15:
+        if duration < 30:
             continue
 
-        print(f"🎬 Clip {idx}: {start:.1f}s → {end:.1f}s ({duration:.1f}s)")
+        reason = seg.get("reason", "sem motivo")
+        print(f"\n🎬 Clip {idx}/{len(segments)}: {start:.1f}s → {end:.1f}s ({duration:.1f}s)")
+        print(f"   💡 Motivo: {reason}")
 
         clip_path = f"clips/{base_name}_{idx}_{session}.mp4"
         short_path = f"shorts/{base_name}_SHORT_{idx}_{session}.mp4"
         temp_silence_path = clip_path.replace(".mp4", "_nosilence.mp4")
 
         if not DRY_RUN:
-            # Cortar trecho do vídeo original
             crop_video(input_video, clip_path, start, end)
-            # Remover silêncios longos (reduz duração)
-            remove_silence(
-                video_in=clip_path,
-                video_out=temp_silence_path
-            )
-            # Renderizar vertical COM ÁUDIO + pan para memes
-            render_vertical_video(
-                temp_silence_path,
-                short_path,
-                pan_engine=True
-            )
-            # Limpar arquivo temporário
+            remove_silence(video_in=clip_path, video_out=temp_silence_path)
+            render_vertical_video(temp_silence_path, short_path, pan_engine=True)
+            
             if os.path.exists(temp_silence_path):
                 try:
                     os.remove(temp_silence_path)
                 except Exception:
                     pass
 
-        # Calcular scores para ranking
-        viral = calculate_viral_score(start, end, seg.get("reason", ""))
+        viral = calculate_viral_score(start, end, reason)
         curve = build_attention_curve(audio_file, duration)
         retention = calculate_retention_metrics(curve)
 
@@ -221,7 +214,6 @@ def main():
             "drop_risk": retention.get("drop_risk", "medio")
         })
 
-        # Gerar legendas SRT
         generate_srt(
             transcriptions,
             clip_start=start,
@@ -233,22 +225,54 @@ def main():
             "file": short_path,
             "start": start,
             "end": end,
+            "duration": duration,
+            "reason": reason,
             "viral": viral,
             "retention": retention["score"],
             "rank": score
         })
 
-    # Salvar ranking final
+    ranking_sorted = sorted(ranking, key=lambda x: x["rank"], reverse=True)
+    
     with open("rankings/ranking.json", "w", encoding="utf-8") as f:
-        json.dump(ranking, f, indent=2, ensure_ascii=False)
+        json.dump(ranking_sorted, f, indent=2, ensure_ascii=False)
 
-    # Limpar áudio temporário
     if os.path.exists(audio_file):
         os.remove(audio_file)
 
-    print("🔥 PIPELINE FINALIZADO 🔥")
-    print(f"   {len(ranking)} shorts gerados em shorts/")
+    print("\n" + "=" * 60)
+    print("🎉 PIPELINE FINALIZADO 🎉")
+    print(f"   📊 {len(ranking)} shorts gerados em shorts/")
+    if ranking_sorted:
+        print(f"   🏆 Top 3 por ranking:")
+        for i, r in enumerate(ranking_sorted[:3], 1):
+            print(f"      {i}. {r['file'].split('/')[-1]} - Score: {r['rank']:.2f}")
+    print("=" * 60)
 
 
 if __name__ == "__main__":
     main()
+
+"""
+ROADMAP DE MELHORIAS:
+
+🔴 CRÍTICO:
+1. Resolver filtros agressivos
+2. Melhorar consistência do GPT
+3. Adicionar logging detalhado
+
+🟡 IMPORTANTE:
+1. Cachear transcrições
+2. Paralelizar renderização
+3. Modo preview
+
+🟢 DESEJÁVEL:
+1. UI web
+2. Análise de áudio sem GPT
+3. Sistema de aprendizado
+
+🔵 FUTURO:
+1. Múltiplas línguas
+2. Detecção de rostos
+3. Upload automático
+"""

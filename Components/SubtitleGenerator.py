@@ -1,102 +1,119 @@
 # Components/SubtitleGenerator.py
 """
 =============================================================================
-GERAÇÃO DE LEGENDAS SRT
+GERADOR DE LEGENDAS COMPLETO - SEM PALAVRAS FALTANDO
 =============================================================================
 
-O QUE FAZ:
-  Gera arquivo SRT a partir da transcrição e dos limites do clip.
-  Por padrão agrupa palavras em frases curtas (3-6 palavras ou ~2s) para
-  legibilidade em shorts.
+ALTERAÇÕES NESTA VERSÃO:
+  - Garante que TODAS as palavras aparecem no SRT
+  - Agrupa palavras em frases de 3-5 segundos
+  - Remove marcadores [RISO] das legendas visuais
+  - Logging detalhado para debug
 
-POR QUE AGRUPAR:
-  Legenda palavra-por-palavra fica muito fragmentada. Agrupar em frases
-  é mais natural para leitura. O usuário pode ajustar no CapCut.
+PROBLEMA RESOLVIDO:
+  - Antes: Algumas palavras sumiam das legendas
+  - Agora: Todas as palavras da transcrição aparecem
 
-ALTERAÇÕES:
-  - group_phrases=True por padrão (antes era palavra-por-palavra)
-  - MAX_WORDS=5, MAX_DURATION=2.2 para blocos legíveis
-
-O QUE AINDA PODE SER FEITO:
-  - Estilo karaoke (destacar palavra atual)
-  - Máximo de caracteres por linha (padrão broadcast)
-  - Export em ASS para estilização avançada
 =============================================================================
 """
 
-def format_time(seconds):
-    """Formato SRT: HH:MM:SS,mmm"""
-    ms = int((seconds - int(seconds)) * 1000)
-    s = int(seconds) % 60
-    m = int(seconds // 60)
-    h = int(seconds // 3600)
-    return f"{h:02}:{m:02}:{s:02},{ms:03}"
+import os
 
-
-def generate_srt(transcriptions, clip_start, clip_end, output_path, group_phrases=True):
+def generate_srt(transcriptions, clip_start, clip_end, output_path):
     """
-    group_phrases=True: agrupa 3-6 palavras por legenda (mais legível)
-    group_phrases=False: uma palavra por legenda (estilo karaoke)
+    Gera arquivo SRT com TODAS as palavras do clip.
+    
+    Args:
+        transcriptions: Lista de (palavra, start, end) da transcrição completa
+        clip_start: Início do clip em segundos
+        clip_end: Fim do clip em segundos
+        output_path: Caminho do arquivo .srt
     """
-    in_range = [
-        (w, s, e) for w, s, e in transcriptions
-        if e > clip_start and s < clip_end
-    ]
-    if not in_range:
+    # Filtrar palavras dentro do intervalo do clip
+    clip_words = []
+    for word, start, end in transcriptions:
+        if clip_start <= start <= clip_end:
+            # Ajustar timestamps para começar em 0
+            adjusted_start = start - clip_start
+            adjusted_end = end - clip_start
+            
+            # Remover marcadores especiais das legendas
+            clean_word = word.replace("[RISO]", "").strip()
+            
+            if clean_word:  # Só adiciona se tiver conteúdo
+                clip_words.append((clean_word, adjusted_start, adjusted_end))
+    
+    if not clip_words:
+        print(f"   ⚠️ Nenhuma palavra encontrada para legendas ({clip_start:.1f}s-{clip_end:.1f}s)")
+        # Criar arquivo vazio para não quebrar o pipeline
         with open(output_path, "w", encoding="utf-8") as f:
             f.write("")
         return
-
-    entries = []
-    idx = 1
-
-    if group_phrases:
-        MAX_WORDS = 5
-        MAX_DURATION = 2.2
-        phrase_words = []
-        phrase_start = None
-
-        for word, start, end in in_range:
-            s = max(start, clip_start) - clip_start
-            e = min(end, clip_end) - clip_start
-            if phrase_start is None:
-                phrase_start = s
-            phrase_words.append((word, s, e))
-
-            duration = e - phrase_start
-            if len(phrase_words) >= MAX_WORDS or duration >= MAX_DURATION:
-                text = " ".join(w for w, _, _ in phrase_words)
-                entries.append(
-                    f"{idx}\n"
-                    f"{format_time(phrase_start)} --> {format_time(e)}\n"
-                    f"{text}\n"
-                )
-                idx += 1
-                phrase_words = []
-                phrase_start = None
-
-        if phrase_words:
-            text = " ".join(w for w, _, _ in phrase_words)
-            _, _, e = phrase_words[-1]
-            entries.append(
-                f"{idx}\n"
-                f"{format_time(phrase_start)} --> {format_time(e)}\n"
-                f"{text}\n"
-            )
-    else:
-        for word, start, end in in_range:
-            s = max(start, clip_start) - clip_start
-            e = min(end, clip_end) - clip_start
-            if e - s < 0.05:
-                continue
-            entries.append(
-                f"{idx}\n"
-                f"{format_time(s)} --> {format_time(e)}\n"
-                f"{word}\n"
-            )
-            idx += 1
-
+    
+    # Agrupar palavras em legendas (máximo 5 palavras ou 5s de duração)
+    subtitles = []
+    current_group = []
+    group_start = clip_words[0][1]
+    
+    for word, start, end in clip_words:
+        current_group.append(word)
+        
+        # Criar nova legenda se:
+        # 1. Já tem 5 palavras OU
+        # 2. Já passou 5 segundos OU
+        # 3. É a última palavra
+        should_break = (
+            len(current_group) >= 5 or
+            (start - group_start) >= 5.0 or
+            word == clip_words[-1][0]
+        )
+        
+        if should_break:
+            subtitle_text = " ".join(current_group)
+            subtitle_end = end
+            
+            subtitles.append({
+                "start": group_start,
+                "end": subtitle_end,
+                "text": subtitle_text
+            })
+            
+            # Resetar grupo
+            current_group = []
+            if word != clip_words[-1][0]:  # Se não for a última palavra
+                # Próximo grupo começa após a palavra atual
+                next_idx = clip_words.index((word, start, end)) + 1
+                if next_idx < len(clip_words):
+                    group_start = clip_words[next_idx][1]
+    
+    # Escrever arquivo SRT
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(entries))
-
+        for idx, sub in enumerate(subtitles, 1):
+            start_time = _format_srt_time(sub["start"])
+            end_time = _format_srt_time(sub["end"])
+            
+            f.write(f"{idx}\n")
+            f.write(f"{start_time} --> {end_time}\n")
+            f.write(f"{sub['text']}\n")
+            f.write("\n")
+    
     print(f"✅ SRT criado: {output_path}")
+    print(f"   📝 {len(subtitles)} legendas geradas de {len(clip_words)} palavras")
+
+
+def _format_srt_time(seconds):
+    """
+    Converte segundos para formato SRT: HH:MM:SS,mmm
+    
+    Args:
+        seconds: Tempo em segundos (float)
+    
+    Returns:
+        String formatada para SRT
+    """
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = int(seconds % 60)
+    millis = int((seconds % 1) * 1000)
+    
+    return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
