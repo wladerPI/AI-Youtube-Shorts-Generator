@@ -1,0 +1,399 @@
+ 
+{
+  "A- - Boa noite.png": {
+    "description": "boa noite boa noite",
+    "position": "bottom",
+    "min_match": 0.75
+  },
+  "A= - Boa noite.png": {
+    "description": "boa noiti",
+    "position": "left",
+    "min_match": 0.75
+  },
+  "A0 - Oi boa noite, ja ja vou sortear alguem para chupar o meu pinto hem.png": {
+    "description": "Oi boa noite, ja ja vou sortear alguem para chupar o meu pinto hem",
+    "position": "left",
+    "min_match": 0.75
+  },
+   
+  "A1 - eu ja to doido para uma briga de foice.png": {
+    "description": "eu ja to doido para uma briga de foice",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "A2 - Chama a policia, chama a policia.png": {
+    "description": "Chama a policia, chama a policia",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "A3 - e coisa de deus.png": {
+    "description": "é coisa de deus",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "A4 - ai Ta amarrado, isso ta amarrado, e coisa do demonio.png": {
+    "description": "ai Ta amarrado, isso ta amarrado, é coisa do demonio",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "A5 - reprovado.png": {
+    "description": "reprovado",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "A6 - Ladrao.png": {
+    "description": "Ladrão",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "A7 - hum boiola.png": {
+    "description": "hum boiola",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "A8 - haram sei.png": {
+    "description": "haram sei",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "A9 - Eu nao ouvi o que ouvi, ouvi.png": {
+    "description": "Eu não ouvi o que ouvi, ouvi",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Aaspa - minha mao ta cosando para dar uns bufete.png": {
+    "description": "minha mão ta cosando para dar uns bufete",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "ABackspace - ja acabou Jessica.png": {
+    "description": "ja acabou Jessica",
+    "position": "bottom_left",
+    "min_match": 0.75
+  },
+  "An, - hahaha.png": {
+    "description": "hahaa",
+    "position": "bottom_left",
+    "min_match": 0.70
+  }, 
+  "An0 - hahaha.png": {
+    "description": "haha",
+    "position": "right",
+    "min_match": 0.90
+  },
+  "An1 - e uma vergolha Brasil.png": {
+    "description": "É uma vergolha Brasil",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "An2 - So besteira.png": {
+    "description": "Só besteira",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "An3 - meu deus.png": {
+    "description": "meu deus",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "An4 - Eu to mentindo, nao to.png": {
+    "description": "Eu to mentindo, não to",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "An5 - deus me livre.png": {
+    "description": "deus me livre",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "An6 - ha mas essa e muito facil, passa uma mais dificil.png": {
+    "description": "ha mas essa é muito facil, passa uma mais dificil",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "An7 - Nem doeu.png": {
+    "description": "Nem doeu",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "An8 - e uma cholofompe.png": {
+    "description": "é uma cholofompe",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "An9 - Ai que burro da zero pra ele.png": {
+    "description": "Ai que burro da zero pra ele",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "AnAsteristico - hahaha.png": {
+    "description": "kkkk",
+    "position": "bottom_left",
+    "min_match": 0.70
+  },
+  "AnBARRA - hahaha.png": {
+    "description": "kkk",
+    "position": "bottom_left",
+    "min_match": 0.70
+  },
+  "C- - Dancando.png": {
+    "description": "Dançando",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "C= - Cheguei, cheguei brasil.png": {
+    "description": "Cheguei, cheguei brasil",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "C1 - Eu nao estou suportando mais, estou no limite brasil.png": {
+    "description": "Eu não estou suportando mais, estou no limite brasil",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "C2 - Volta o cao arrependido.png": {
+    "description": "Volta o cão arrependido",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "C3 - Ja tava bom, diz que ei mudar pra melhor, tava ruin tb, agora parece que pioro.png": {
+    "description": "Ja tava bom, diz que ei mudar pra melhor, tava ruin tb, agora parece que pioro",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "C4 - Nem quem ganhar nem perder, vai ganhar ou perder, vai todo mundo perder.png": {
+    "description": "Nem quem ganhar nem perder, vai ganhar ou perder, vai todo mundo perder",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "C5 - Eu to saudando a mandioca.png": {
+    "description": "Eu to saudando a mandioca",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "C6 - E e isso, que a ciencia faz, desda arca de noe.png": {
+    "description": "E é isso, que a ciência faz, desda arca de noé",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "C7 - Acho uma das maiores conquistas do brasil.png": {
+    "description": "Acho uma das maiores conquistas do brasil",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "C8 - Aleluia, Aleluia.png": {
+    "description": "Aleluia, Aleluia",
+    "position": "bottom_left",
+    "min_match": 0.80
+  },
+  "C9 - Que de mais.png": {
+    "description": "Que de mais",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "CA- - E agora em setembro vai entrar o grosso.png": {
+    "description": "E agora em setembro vai entrar o grosso",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA' - seu madruga.png": {
+    "description": "seu madruga",
+    "position": "bottom_right",
+    "min_match": 0.75
+  },
+  "CA= - nao interessa para voce, palhaco.png": {
+    "description": "não interessa para você, palhaço",
+    "position": "bottom_right",
+    "min_match": 0.80
+  },
+  "CA0 - Eu quero, eu posso.png": {
+    "description": "Eu quero, eu posso",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "CA1 - O imposto e muito baixo no brasil.png": {
+    "description": "O imposto é muito baixo no brasil",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA2 - Da um saco de bombom pro vagabundo, manda rosas pro vagabundo.png": {
+    "description": "Da um saco de bombom pro vagabundo, manda rosas pro vagabundo",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA3 - eu nao sei como que conseguiu, enganar tanta gente.png": {
+    "description": "eu não sei como que conseguiu, enganar tanta gente",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA4 - ele e mal, e agente, e mal tambem.png": {
+    "description": "ele é mal, e agente, é mal também",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "CA5 - voce me dao licenca, eu vou cagar.png": {
+    "description": "você me dão licença, eu vou cagar",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA6 - Rachamos o zoi dele de tiro.png": {
+    "description": "Rachamos o zoi dele de tiro",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA7 - Enchemo o rabao dele de tiro.png": {
+    "description": "Enchemo o rabão dele de tiro",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA8 - O satanas ajuda esses demonio ne.png": {
+    "description": "O satanas ajuda esses demonio ne",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CA9 - hoje, ondem, e amanha, sempre.png": {
+    "description": "hoje, ondem, e amanha, sempre",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "CAbackspace - A morre, diabo.png": {
+    "description": "A morre, diabo",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "CAn0 - tres dias depois.png": {
+    "description": "três dias depois",
+    "position": "fullscreen",
+    "min_match": 0.70
+  },
+  "CAn1 - Ma voce e homem mesmo ou e bixa.png": {
+    "description": "Má você é homem mesmo ou é bixa",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "CAn2 - Ai ta vendo.png": {
+    "description": "Aí ta vendo",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "CAn3 - isso e uma vergolha.png": {
+    "description": "isso é uma vergolha",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "CAn4 - que vergolha hem, que papelao, falar mais o que hem, de uma situacao dessa.png": {
+    "description": "que vergolha hem, que papelão, falar mais o que hem, de uma situação dessa",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "CAn5 - Olha eu nao sei o que aconteceu, se aconteceu, nao to sabendo, nao e isso que aconteceu, porque nao sei o que aconteceu.png": {
+    "description": "Olha eu não sei o que aconteceu, se aconteceu, não to sabendo, não é isso que aconteceu, porque não sei o que aconteceu",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "CAn6 - ele nao faz nada.png": {
+    "description": "ele não faz nada",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "CAn7 - deve estar bebado.png": {
+    "description": "deve estar bebado",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "CAn8 - Eu ja avisei que vai dar merda isso.png": {
+    "description": "Eu já avisei que vai dar merda isso",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "CAn9 - Dai eu te pergunto, voce sabe, porque que o lula, nao tem esse dedinho aqui, se sabe, voce nao sabe, porque ele nem tem esse dedinho aqui, porque esse dedinho aqui e o meu.png": {
+    "description": "Daí eu te pergunto, você sabe, porque que o lula, não tem esse dedinho aqui, se sabe, você não sabe, porque ele nem tem esse dedinho aqui, porque esse dedinho aqui é o meu",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CAnASTERISTICO - hahaha.png": {
+    "description": "hahahaha",
+    "position": "bottom_left",
+    "min_match": 0.70
+  },
+  "CAnBARRA - hahaha.png": {
+    "description": "hahaha lol",
+    "position": "bottom_left",
+    "min_match": 0.70
+  },
+  "Caspa - que tristresa.png": {
+    "description": "que tristresa",
+    "position": "left",
+    "min_match": 0.85
+  },
+  "Cbackspace - ele nao vai nao.png": {
+    "description": "ele não vai não",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Cn, - Sexo.png": {
+    "description": "Sexo",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "Cn0 - Ai pai para.png": {
+    "description": "Ai pai para",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Cn1 - nao nada haver irmao.png": {
+    "description": "não nada haver irmão",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Cn2 - e ue.png": {
+    "description": "é ué",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Cn3 - e ta bom.png": {
+    "description": "é ta bom",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Cn4 - morre porra.png": {
+    "description": "morre porra",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Cn5 - vai pro inferno.png": {
+    "description": "vai pro inferno",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "Cn6 - mas, eu sou obrigado a falar, esse programa aqui esta uma porra.png": {
+    "description": "mas, eu sou obrigado a falar, esse programa aqui está uma porra",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "Cn7 - Que merda hem.png": {
+    "description": "Que merda hem",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "Cn8 - no ceu tem pao.png": {
+    "description": "no céu tem pão",
+    "position": "bottom_left",
+    "min_match": 0.85
+  },
+  "Cn9 - Quero cafe.png": {
+    "description": "Quero café",
+    "position": "bottom_right",
+    "min_match": 0.85
+  },
+  "CnASTERISTICO - esse e o tal do mula.png": {
+    "description": "esse é o tal do mula",
+    "position": "right",
+    "min_match": 0.85
+  },
+  "CnBARRA - Cagao.png": {
+    "description": "Cagão",
+    "position": "right",
+    "min_match": 0.90
+  } 
+}

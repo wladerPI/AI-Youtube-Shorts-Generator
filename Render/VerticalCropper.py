@@ -1,136 +1,161 @@
-# Render/VerticalCropper.py
+# Render/VerticalCropper.py - VERSÃO COM ÁUDIO CORRIGIDA
 """
 =============================================================================
-RENDERIZAÇÃO VERTICAL 9:16 COM ÁUDIO
+VERTICAL CROPPER COM ÁUDIO - VERSÃO FINAL
 =============================================================================
 
-O QUE FAZ:
-  Converte vídeo horizontal em vertical 9:16 (Shorts/TikTok/Reels).
-  USA MOVIEPY (não OpenCV) para PRESERVAR O ÁUDIO.
-  Se pan_engine=True, detecta memes nos cantos e faz pan da câmera.
+CORREÇÃO CRÍTICA:
+- cv2.VideoWriter NÃO suporta áudio!
+- Solução: Renderizar vídeo com OpenCV, depois adicionar áudio com ffmpeg
 
-ALTERAÇÃO CRÍTICA:
-  O código original usava cv2.VideoWriter, que NÃO suporta áudio.
-  Os shorts saíam SEM SOM. Foi reescrito com MoviePy.
-
-FLUXO DO PAN:
-  - Por padrão: crop central (centro da tela)
-  - Quando MemeCornerDetector encontra face/atividade no canto: pan suave
-    para esquerda ou direita, mantém 2s, retorna ao centro com transição 0.3s
-
-O QUE AINDA PODE SER FEITO:
-  - Easing mais sofisticado
-  - Configurar show_duration por tipo de evento
-  - Suportar zoom opcional em momentos-chave
 =============================================================================
 """
 
+import cv2
+import numpy as np
+import subprocess
 import os
-from moviepy.editor import VideoFileClip
-
-import sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from Components.MemeCornerDetector import detect_meme_corners
+from pathlib import Path
 
 
-def _get_pan_x(t, vw, crop_w, pan_events):
+def render_vertical_video(video_in, video_out, meme_events=None, session_id=None):
     """
-    Posição X do crop no tempo t.
-    Centro por padrão. Durante eventos: left_x (0) ou right_x (vw - crop_w).
-    Transição suave (smoothstep) de 0.3s na entrada e saída do evento.
+    Renderiza vídeo vertical PRESERVANDO ÁUDIO.
+    
+    FUNCIONAMENTO:
+    1. Renderiza vídeo vertical com OpenCV (sem áudio)
+    2. Adiciona áudio do vídeo original com ffmpeg
     """
-    center_x = (vw - crop_w) // 2
-    left_x = 0
-    right_x = vw - crop_w
-
-    for ev in pan_events:
-        start, end = ev["start"], ev["end"]
-        region = ev.get("region", "center")
-        trans = 0.3
-
-        if region == "left":
-            target = left_x
-        elif region == "right":
-            target = right_x
-        else:
-            continue
-
-        if t < start or t > end:
-            continue
-
-        # Entrada: centro → target
-        if t < start + trans:
-            alpha = (t - start) / trans
-            alpha = alpha * alpha * (3 - 2 * alpha)  # smoothstep
-            return int(center_x + (target - center_x) * alpha)
-        # Saída: target → centro
-        if t > end - trans:
-            alpha = (end - t) / trans
-            alpha = alpha * alpha * (3 - 2 * alpha)
-            return int(target + (center_x - target) * (1 - alpha))
-
-        return target
-
-    return center_x
-
-
-def render_vertical_video(
-    input_video,
-    output_video,
-    pan_engine=True,
-    target_width=1080,
-    target_height=1920
-):
-    """
-    Renderiza vídeo vertical. SEMPRE preserva áudio.
-    pan_engine=True: chama MemeCornerDetector e aplica pan nos eventos.
-    """
-    clip = VideoFileClip(input_video)
-    vw, vh = clip.size
-    duration = clip.duration
-
-    # Largura do crop para proporção 9:16
-    crop_w = int(vh * 9 / 16)
-    if crop_w > vw:
-        crop_w = vw
-
-    pan_events = []
-    if pan_engine:
-        try:
-            pan_events = detect_meme_corners(
-                input_video,
-                sample_interval=0.4,
-                show_duration=2.0
-            )
-            if pan_events:
-                print(f"   🎯 {len(pan_events)} eventos de meme detectados nos cantos")
-        except Exception as e:
-            print(f"   ⚠️ MemeCornerDetector: {e} — usando centro fixo")
-
-    def crop_frame(get_frame, t):
-        frame = get_frame(t)
-        x = _get_pan_x(t, vw, crop_w, pan_events)
-        x = max(0, min(x, vw - crop_w))
-        return frame[0:vh, x:x + crop_w]
-
-    vertical = clip.fl(crop_frame)
-
-    # CRUCIAL: preservar áudio
-    if clip.audio:
-        vertical = vertical.set_audio(clip.audio)
-
-    vertical = vertical.resize(height=target_height)
-
-    vertical.write_videofile(
-        output_video,
-        codec="libx264",
-        audio_codec="aac",
-        preset="medium",
-        threads=4
+    print(f"🎬 Renderizando: {Path(video_in).name} → {Path(video_out).name}")
+    
+    # Arquivo temporário SEM áudio
+    temp_video = str(Path(video_out).with_suffix('')) + "_temp.mp4"
+    
+    # Abrir vídeo
+    cap = cv2.VideoCapture(video_in)
+    
+    if not cap.isOpened():
+        print(f"❌ Erro ao abrir vídeo: {video_in}")
+        return False
+    
+    # Propriedades do vídeo
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+    # Dimensões do output (vertical)
+    output_width = 1080
+    output_height = 1920
+    
+    print(f"   Input: {width}x{height} @ {fps:.1f} FPS")
+    print(f"   Output: {output_width}x{output_height}")
+    
+    # Criar writer (SEM áudio)
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(temp_video, fourcc, fps, (output_width, output_height))
+    
+    if not out.isOpened():
+        print(f"❌ Erro ao criar writer")
+        cap.release()
+        return False
+    
+    # Processar frames
+    frame_num = 0
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        
+        # Progresso
+        if frame_num % (int(fps) * 10) == 0:
+            progress = (frame_num / total_frames) * 100
+            print(f"      [{progress:5.1f}%] Frame {frame_num}/{total_frames}")
+        
+        # Comportamento: centro fixo
+        half_width = output_width // 2
+        center_x = width // 2
+        x1 = max(0, center_x - half_width)
+        x2 = min(width, center_x + half_width)
+        y1 = 0
+        y2 = height
+        
+        # Crop e resize
+        cropped = frame[y1:y2, x1:x2]
+        
+        # Garantir dimensões corretas
+        if cropped.shape[1] != output_width or cropped.shape[0] != height:
+            cropped = cv2.resize(cropped, (output_width, height))
+        
+        # Resize para vertical
+        vertical = cv2.resize(cropped, (output_width, output_height))
+        
+        # Escrever frame
+        out.write(vertical)
+        
+        frame_num += 1
+    
+    # Liberar recursos
+    cap.release()
+    out.release()
+    
+    print(f"   ✅ Vídeo renderizado (sem áudio)")
+    
+    # ADICIONAR ÁUDIO COM FFMPEG
+    print(f"   🎵 Adicionando áudio...")
+    
+    cmd = [
+        'ffmpeg',
+        '-i', temp_video,      # Vídeo sem áudio
+        '-i', video_in,        # Vídeo original (com áudio)
+        '-map', '0:v:0',       # Vídeo do primeiro input
+        '-map', '1:a:0',       # Áudio do segundo input
+        '-c:v', 'copy',        # Copiar vídeo (não re-encode)
+        '-c:a', 'aac',         # Encode áudio para aac
+        '-b:a', '192k',        # Bitrate
+        '-shortest',           # Terminar quando o menor acabar
+        '-y',
+        video_out
+    ]
+    
+    result = subprocess.run(
+        cmd,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        text=True
     )
+    
+    # Limpar temp
+    if os.path.exists(temp_video):
+        os.remove(temp_video)
+    
+    if result.returncode == 0:
+        print(f"   ✅ Renderização completa COM ÁUDIO!")
+        return True
+    else:
+        print(f"   ❌ Erro ao adicionar áudio: {result.stderr[:200]}")
+        return False
 
-    clip.close()
-    vertical.close()
 
-    print(f"✅ Vertical render finalizado (com áudio): {output_video}")
-    return output_video
+# =============================================================================
+# TESTE
+# =============================================================================
+
+if __name__ == "__main__":
+    import sys
+    
+    if len(sys.argv) < 3:
+        print("Uso: python VerticalCropper.py <input.mp4> <output.mp4>")
+        sys.exit(1)
+    
+    video_in = sys.argv[1]
+    video_out = sys.argv[2]
+    
+    success = render_vertical_video(video_in, video_out)
+    
+    if success:
+        print("✅ Sucesso!")
+    else:
+        print("❌ Falhou!")
+        sys.exit(1)
