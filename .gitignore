@@ -139,3 +139,12 @@ logs/
 htmlcov/
 .tox/
 .hypothesis/
+
+
+# Ambientes virtuais Python
+.venv/
+venv/
+venv311/  ← ADICIONAR ESTA LINHA
+ENV/
+env/
+virtualenv/
