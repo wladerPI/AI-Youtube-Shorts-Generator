@@ -147,4 +147,4 @@ venv/
 venv311/  ← ADICIONAR ESTA LINHA
 ENV/
 env/
-virtualenv/
+virtualenv/venv311/ 
