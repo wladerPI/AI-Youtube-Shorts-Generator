@@ -1,227 +1,204 @@
-# 🎬 AI-Youtube-Shorts-Generator
+# 🎬 AI-Youtube-Shorts-Generator V3
 
-> **Sistema profissional de IA para geração automática de shorts de alta qualidade a partir de lives de gameplay**
+> **O melhor gerador de shorts automático do mundo** 🏆
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-412991.svg)](https://openai.com/)
+Sistema profissional para transformar lives/vídeos longos em shorts virais usando IA.
 
----
-
-## 🌟 **Destaques**
-
-- 🎭 **Detecção inteligente de memes** - Reconhece automaticamente seus 79 memes personalizados
-- 😂 **Análise de risadas** - Identifica concentrações de risadas e momentos engraçados
-- 🧠 **Aprendizado de máquina** - Sistema aprende suas preferências e melhora a cada live
-- 🎯 **Multi-perfil** - Suporte para múltiplos criadores com preferências individuais
-- 🔊 **Áudio perfeito** - Todos os shorts gerados com áudio sincronizado
-- 📊 **Taxa de aprovação 70%+** - Depois de 3 lives revisadas
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Produção-success.svg)]()
 
 ---
 
-## 📋 **Índice**
+## ✨ FEATURES V3.0
 
-- [Funcionalidades](#-funcionalidades)
-- [Demo](#-demo)
-- [Instalação](#-instalação-rápida)
-- [Uso Rápido](#-uso-rápido)
-- [Documentação Completa](#-documentação)
-- [Como Funciona](#-como-funciona)
-- [Requisitos](#-requisitos)
-- [Contribuindo](#-contribuindo)
-- [Licença](#-licença)
+### 🎯 **Seleção Inteligente**
+- ✅ Detecta **79 memes personalizados** do streamer
+- ✅ Análise de áudio (risadas, energia, intensidade)
+- ✅ Análise de contexto com GPT-4
+- ✅ Sistema de pontuação híbrido (10+ fatores)
+- ✅ Aprendizado automático por perfil
 
----
+### ⚡ **Otimização de Vídeo** (NOVO V3!)
+- ✅ Remove silêncios automático (>1s)
+- ✅ Acelera vídeo 1.25x (configurável 1.0x-1.3x)
+- ✅ Normalização de áudio profissional
+- ✅ Mantém sincronia perfeita
 
-## ✨ **Funcionalidades**
+### 📝 **Legendas Profissionais** (NOVO V3!)
+- ✅ Word-level timing (milissegundos)
+- ✅ PT-BR nativo
+- ✅ Exporta .SRT + .ASS
+- ✅ Múltiplos estilos (Hormozi, MrBeast, Gaming)
+- ✅ CapCut-ready
 
-### **Sistema de Pontuação Profissional**
-- ✅ **Análise de Áudio** - Detecta energia de voz, intensidade e momentos impactantes
-- ✅ **Análise de Contexto (GPT-4)** - Identifica narrativas, frases marcantes e contexto
-- ✅ **Detecção de Memes** - Reconhece palavras e frases dos seus memes configurados
-- ✅ **Concentração de Risadas** - Prioriza momentos com múltiplas risadas
-- ✅ **Score Combinado** - Pontuação final considera todos os fatores (até 30+ pontos!)
+### 🎥 **Movimento de Câmera** (NOVO V3!)
+- ✅ Detecta memes por TEXTO (sem GPU!)
+- ✅ Move câmera para esquerda/direita
+- ✅ Retorna ao centro automaticamente
+- ✅ Processamento viável em CPU
 
-### **Sistema de Aprendizado**
-- 🧠 **Revisão Interativa** - Interface simples S/N para aprovar/rejeitar shorts
-- 🧠 **Ajuste Automático** - Thresholds se adaptam baseado nas suas avaliações
-- 🧠 **Multi-perfil** - Cada criador tem suas próprias preferências
-- 🧠 **Melhoria Contínua** - Cada live gera shorts melhores que a anterior
-
-### **Qualidade Profissional**
-- 🎥 **Formato Vertical** - 1080x1920 pronto para YouTube Shorts/TikTok/Reels
-- 🔊 **Áudio Sincronizado** - Extração e renderização com áudio perfeito
-- ⚡ **Otimizado para CPU** - Funciona sem GPU (transcrição em chunks)
-- 📊 **Validação de Qualidade** - Verifica qualidade da transcrição automaticamente
-
----
-
-## 🎥 **Demo**
-
-### **Entrada: Live de 4 horas**
-```
-input/live_cortado.mp4
-├─ Duração: 4h 11min
-├─ Resolução: 1280x720
-└─ Áudio: AAC 127kbps
-```
-
-### **Saída: 10 shorts de alta qualidade**
-```
-output/shorts_XXXXXX/
-├─ short_001.mp4 (60s) - Score: 18.2 🎭🎭😂
-├─ short_002.mp4 (75s) - Score: 15.8 🎭😂
-├─ short_003.mp4 (60s) - Score: 14.3 😂😂
-└─ ... (10 shorts totais)
-
-Taxa de aprovação: 70%+
-Tempo de processamento: ~45 minutos
-```
+### 🧠 **Aprendizado Contínuo**
+- ✅ Sistema de revisão interativo
+- ✅ Aprende automaticamente após cada sessão
+- ✅ Ajusta thresholds baseado em taxa de aprovação
+- ✅ Multi-perfil com configurações independentes
 
 ---
 
-## 🚀 **Instalação Rápida**
-
-### **Pré-requisitos**
-- Python 3.11+
-- FFmpeg
-- OpenAI API Key
-- 8GB+ RAM
-
-### **Instalação em 3 passos:**
+## 🚀 INSTALAÇÃO RÁPIDA
 
 ```bash
-# 1. Clonar repositório
-git clone https://github.com/seu-usuario/AI-Youtube-Shorts-Generator.git
+# 1. Clonar
+git clone https://github.com/wladerPI/AI-Youtube-Shorts-Generator.git
 cd AI-Youtube-Shorts-Generator
 
 # 2. Instalar dependências
 pip install -r requirements.txt
 
 # 3. Configurar API
-cp .env.example .env
-# Editar .env e adicionar sua OPENAI_API_KEY
+echo OPENAI_API_KEY=sua-chave-aqui > .env
+
+# 4. Instalar ffmpeg
+# Windows: https://ffmpeg.org/download.html
+# Linux: sudo apt install ffmpeg
+# macOS: brew install ffmpeg
 ```
 
-📚 **[Guia de Instalação Completo →](INSTALLATION.md)**
+📚 **[Guia completo de instalação →](INSTALLATION.md)**
 
 ---
 
-## ⚡ **Uso Rápido**
+## 💻 USO
 
-### **Gerar shorts de uma live:**
+### **Gerar Shorts:**
 
 ```bash
-# 1. Processar live (gera 10 shorts)
-python run_pipeline_PROFESSIONAL_V2.py input/minha_live.mp4 10 --profile meu_canal
-
-# 2. Revisar shorts (S = aprova, N = rejeita)
-python review_shorts.py output/shorts_XXXXXX/ --profile meu_canal
-
-# 3. Pronto! Sistema aprendeu automaticamente
-# Próxima live terá shorts ainda melhores!
+python run_pipeline.py input/live.mp4 10 --profile lives_do_11closed
 ```
 
-📚 **[Guia de Uso Completo →](USAGE.md)**
-
----
-
-## 📚 **Documentação**
-
-| Documento | Descrição |
-|-----------|-----------|
-| **[INSTALLATION.md](INSTALLATION.md)** | Instalação passo a passo detalhada |
-| **[USAGE.md](USAGE.md)** | Como usar todas as funcionalidades |
-| **[CONFIGURATION.md](CONFIGURATION.md)** | Configuração e personalização |
-| **[ARCHITECTURE.md](ARCHITECTURE.md)** | Como o sistema funciona internamente |
-| **[CHANGELOG.md](CHANGELOG.md)** | Histórico de versões e atualizações |
-
----
-
-## 🔧 **Como Funciona**
-
-### **Pipeline de Processamento (7 passos):**
-
+**Resultado:**
 ```
-1️⃣ EXTRAÇÃO DE ÁUDIO
-   ↓ FFmpeg extrai áudio em 16kHz mono
-   
-2️⃣ TRANSCRIÇÃO (Whisper)
-   ↓ Transcreve em PT-BR com timestamps
-   ↓ Detecta [RISO] e risadas
-   
-3️⃣ VALIDAÇÃO
-   ↓ Verifica qualidade da transcrição
-   
-4️⃣ ANÁLISE DE ÁUDIO
-   ↓ Energia de voz, intensidade, risadas
-   
-5️⃣ ANÁLISE DE CONTEXTO (GPT-4)
-   ↓ Identifica narrativas, frases, contexto
-   
-6️⃣ PONTUAÇÃO DE MEMES
-   ↓ Detecta palavras dos seus 79 memes
-   ↓ Calcula concentração de risadas
-   
-7️⃣ SELEÇÃO E RENDERIZAÇÃO
-   ↓ Seleciona TOP 10 por score
-   ↓ Renderiza 1080x1920 com áudio
+output/shorts_20260310_163045/
+├── short_001.mp4  ✅ Otimizado + Legendas
+├── short_001.srt  ✅ Legendas PT-BR
+├── short_001.ass  ✅ Legendas estilizadas
+├── short_002.mp4
+├── ...
+└── short_010.mp4
 ```
 
-### **Sistema de Pontuação:**
+### **Revisar e Aprender:**
 
-```python
-Score Final = (Áudio + Contexto + Memes + Risadas) × Bônus
-
-EXEMPLO:
-├─ 2 risadas: +3.0
-├─ Energia alta: +1.0
-├─ GPT detectou frase marcante: ×1.3
-├─ 2 memes detectados: +4.0, ×1.5
-├─ COMBO (áudio + contexto + memes): ×1.5
-└─ Score Final: 18.2 pontos! ⭐⭐⭐
+```bash
+python review_shorts.py output/shorts_XXXXX/ --profile lives_do_11closed
 ```
 
-📚 **[Arquitetura Completa →](ARCHITECTURE.md)**
+Sistema aprende automaticamente! 🧠
+
+📚 **[Documentação completa →](USAGE.md)**
 
 ---
 
-## 💻 **Requisitos**
+## 🎯 DIFERENCIAIS
 
-### **Hardware Recomendado:**
-- **CPU:** 4+ cores
-- **RAM:** 8GB+ (16GB recomendado)
-- **Disco:** 20GB+ espaço livre
-- **GPU:** Opcional (acelera transcrição)
+### **O QUE OUTROS NÃO TÊM:**
 
-### **Software:**
-- **Python:** 3.11 ou superior
-- **FFmpeg:** Última versão
-- **Sistema:** Windows 10/11, Linux, macOS
+✅ **79 memes personalizados detectados**
+- Análise textual de frases marcantes do streamer
+- Detecção por palavras-chave configuráveis
 
-### **APIs:**
-- **OpenAI API:** GPT-4 (para análise de contexto)
+✅ **Aprendizado contínuo por perfil**
+- Sistema aprende suas preferências
+- Ajusta automaticamente baseado em aprovações
 
----
+✅ **Otimização profissional**
+- Remove pausas chatas
+- Acelera para manter ritmo
+- Áudio normalizado
 
-## 🎯 **Roadmap**
+✅ **Legendas prontas para CapCut**
+- Timing perfeito
+- Múltiplos estilos
+- Exportação .srt/.ass
 
-- [x] Sistema básico de geração de shorts
-- [x] Detecção de memes personalizada
-- [x] Sistema de aprendizado multi-perfil
-- [x] Validação de transcrição
-- [x] Áudio sincronizado
-- [ ] Detecção visual de memes (template matching)
-- [ ] Suporte para múltiplos idiomas
-- [ ] Interface web (dashboard)
-- [ ] Análise de sentimentos
-- [ ] Detecção automática de thumbnails
+✅ **100% Open Source e Customizável**
+- Código limpo e documentado
+- Fácil adicionar novos memes
+- Configurável por perfil
 
 ---
 
-## 🤝 **Contribuindo**
+## 📦 COMPONENTES V3
 
-Contribuições são bem-vindas! Para contribuir:
+### **Core:**
+- `run_pipeline.py` - Pipeline completo 7 passos
+- `review_shorts.py` - Sistema de revisão interativo
+- `apply_learning.py` - Aplicar aprendizado manual
+
+### **Components:**
+- `AudioAnalyzer` - Análise de áudio (risadas, energia)
+- `ContextAnalyzer` - Análise GPT-4 de contexto
+- `MemeScorer` - Detecção de 79 memes
+- `ClipSelector` - Seleção inteligente
+- `ProfileManager` - Gestão de perfis com aprendizado
+- `SubtitleGenerator` - Legendas profissionais ⭐ NOVO
+- `VideoOptimizer` - Otimização de vídeo ⭐ NOVO
+- `TranscriptionValidator` - Validação de qualidade
+
+### **Render:**
+- `VerticalCropper` - Crop vertical 9:16
+- `SmartCropper` - Movimento de câmera ⭐ NOVO
+- `CameraController` - Controle de câmera
+
+---
+
+## 🎮 EXEMPLO: CANAL "11closed"
+
+**Live de Dreadway (4h):**
+- 📊 Input: 1 live completa
+- ⚡ Processamento: ~80 minutos
+- 🎬 Output: 10 shorts otimizados
+- 📝 Legendas: PT-BR automáticas
+- ✅ Taxa de aprovação: 70%+
+
+**Memes detectados:**
+- "Puta que pariu!" (21x)
+- "Chama a polícia!" (8x)
+- "Já acabou Jessica" (5x)
+- ... (79 memes configurados)
+
+---
+
+## ⚙️ REQUISITOS
+
+### **Sistema:**
+- Python 3.8+
+- 16GB RAM (recomendado)
+- CPU multi-core (GPU opcional)
+
+### **Dependências principais:**
+- OpenAI API (GPT-4)
+- Whisper (transcrição)
+- opencv-python (vídeo)
+- librosa (áudio)
+- ffmpeg (processamento)
+
+---
+
+## 📚 DOCUMENTAÇÃO
+
+- 📖 [Guia Rápido](QUICKSTART.md)
+- 📖 [Instalação Completa](INSTALLATION.md)
+- 📖 [Documentação de Uso](USAGE.md)
+- 📖 [Changelog](CHANGELOG.md)
+- 📖 [Guia Completo V3](GUIA_COMPLETO_V2.md)
+
+---
+
+## 🤝 CONTRIBUIR
+
+Contribuições são bem-vindas! Por favor:
 
 1. Fork o projeto
 2. Crie uma branch (`git checkout -b feature/MinhaFeature`)
@@ -231,40 +208,24 @@ Contribuições são bem-vindas! Para contribuir:
 
 ---
 
-## 📝 **Licença**
+## 📄 LICENÇA
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
-## 👨‍💻 **Autor**
-
-Desenvolvido com ❤️ para criadores de conteúdo de gameplay
+MIT License - veja [LICENSE](LICENSE) para detalhes.
 
 ---
 
-## 🙏 **Agradecimentos**
+## 🙏 CRÉDITOS
 
-- **OpenAI** - GPT-4 e Whisper
-- **FFmpeg** - Processamento de vídeo
-- **Comunidade Python** - Bibliotecas incríveis
+Desenvolvido por **[@wladerPI](https://github.com/wladerPI)**
 
----
-
-## 📧 **Suporte**
-
-Encontrou um bug? Tem uma sugestão?
-
-- 🐛 [Reportar Bug](https://github.com/seu-usuario/AI-Youtube-Shorts-Generator/issues)
-- 💡 [Sugerir Feature](https://github.com/seu-usuario/AI-Youtube-Shorts-Generator/issues)
-- 📧 Email: seu-email@exemplo.com
+Criado especialmente para o canal **11closed** (lives de Dreadway)
 
 ---
 
 <div align="center">
 
-**⭐ Se este projeto te ajudou, considere dar uma estrela! ⭐**
+**🎬 Feito com ❤️ para criadores de conteúdo 🎬**
 
-[![GitHub stars](https://img.shields.io/github/stars/seu-usuario/AI-Youtube-Shorts-Generator.svg?style=social&label=Star)](https://github.com/seu-usuario/AI-Youtube-Shorts-Generator)
+⭐ **Se gostou, deixe uma estrela!** ⭐
 
 </div>

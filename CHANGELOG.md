@@ -1,138 +1,155 @@
-# 📝 Changelog
+# 📝 CHANGELOG
 
-Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
+Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 
-O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
-e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
+---
+
+## [3.0.0] - 2026-03-10 🎉
+
+### 🚀 **LANÇAMENTO VERSÃO 3.0 - SISTEMA PROFISSIONAL COMPLETO**
+
+### ✨ Adicionado
+
+#### **Otimização de Vídeo (VideoOptimizer)**
+- Remove silêncios automático (>1 segundo)
+- Acelera vídeo 1.2x-1.3x (configurável)
+- Normalização de áudio profissional
+- Mantém sincronia perfeita áudio/vídeo
+
+#### **Legendas Profissionais (SubtitleGenerator)**
+- Word-level timing com precisão de milissegundos
+- PT-BR nativo
+- Exportação .SRT + .ASS
+- Múltiplos estilos: default, hormozi, mrbeast, gaming
+- Quebra inteligente de linhas
+- CapCut-ready
+
+#### **Movimento de Câmera (SmartCropper)**
+- Detecção de memes por TEXTO (sem GPU!)
+- Movimento suave para esquerda/direita
+- Retorna ao centro automaticamente
+- Viável em CPU (sem processamento frame-by-frame)
+
+#### **ProfileManager V3**
+- Configurações avançadas por perfil
+- Keywords personalizadas para highlight
+- Velocidade de vídeo configurável
+- Estilo de legendas configurável
+- Remoção de silêncio on/off
+- Movimento de câmera on/off
+- Aprendizado mais robusto
+
+### 🔧 Melhorado
+
+- **Pipeline completo integrado** (7 passos)
+- **Imports corrigidos** após renomeação de arquivos
+- **Estrutura de código limpa** (removidos 20 arquivos duplicados)
+- **Documentação completa** atualizada
+
+### 🐛 Corrigido
+
+- **Shorts sem áudio** (VerticalCropper agora usa ffmpeg)
+- **Whisper travando** (processamento em chunks de 30 min)
+- **API OpenAI inválida** (correção de .env)
+- **Imports quebrados** após renomeações
+
+### 📚 Documentação
+
+- Novo `QUICKSTART.md` - Guia rápido
+- Atualizado `README.md` - Features V3
+- Novo `CHANGELOG.md` - Este arquivo
+- Atualizado `USAGE.md` - Novos comandos
 
 ---
 
 ## [2.0.0] - 2026-03-08
 
-### 🎉 Lançamento Profissional V2
+### ✨ Adicionado
 
-#### ✨ Adicionado
-- **MemeScorer.py**: Sistema de detecção inteligente de memes
-  - Lê meme_config.json com 79 memes personalizados
-  - Detecta palavras dos memes na transcrição
-  - Score 2-3x maior para momentos com memes
-  - Detecção de concentração de risadas (múltiplas risadas em pouco tempo)
+#### **Sistema de Aprendizado**
+- ProfileManager V2 com multi-perfil
+- Sistema de revisão interativo (review_shorts.py)
+- Aprendizado automático após revisão
+- Thresholds adaptativos
 
-- **TranscriptionValidator.py**: Validação de qualidade da transcrição
-  - Score de qualidade 0-100
-  - Detecta palavras malformadas
-  - Alerta sobre problemas na transcrição
-  - Recomendações para melhorar qualidade
+#### **Detecção de Memes**
+- MemeScorer com 79 memes configurados
+- Detecção por texto (palavras-chave)
+- Sistema de pontuação 2-3x maior para memes
+- meme_config.json com configurações
 
-- **ClipSelector_V2.py**: Seletor profissional com prioridade de memes
-  - Integra MemeScorer
-  - Bônus para combos (áudio + contexto + memes)
-  - Usa thresholds otimizados do perfil
-  - Filtragem inteligente por qualidade
+#### **Validação de Qualidade**
+- TranscriptionValidator
+- Score de qualidade 0-100
+- Alertas de transcrição ruim
 
-- **ProfileManager_V2.py**: Sistema multi-perfil com aprendizado
-  - Suporte a múltiplos perfis (diferentes criadores)
-  - Aprendizado automático baseado em reviews
-  - Ajuste automático de thresholds
-  - Estatísticas avançadas por perfil
-  - Análise de motivos de rejeição
+### 🔧 Melhorado
 
-- **review_shorts.py**: Interface de revisão interativa
-  - Sistema S/N/P/Q para avaliar shorts
-  - Registro de motivos de rejeição
-  - Aprendizado automático ao final
-  - Compatibilidade com ProfileManager V1 e V2
-
-- **apply_learning.py**: Script para aplicar aprendizado manualmente
-  - Útil para reprocessar reviews antigos
-  - Atualiza perfil com novas avaliações
-
-- **run_pipeline_PROFESSIONAL_V2.py**: Pipeline completo V2
-  - 7 passos profissionais
-  - Validação de transcrição
-  - Pontuação de memes
-  - Integração com todos os novos componentes
-
-#### 🔧 Modificado
-- **VerticalCropper.py**: Agora preserva áudio corretamente
-  - Renderiza vídeo com OpenCV
-  - Adiciona áudio com ffmpeg
-  - Corrige problema de shorts sem áudio
-
-- **AudioAnalyzer.py**: Detecção melhorada de risadas
-  - Suporta múltiplos formatos de transcrição
-  - Detecta concentração de risadas
-  - Score ajustado para [RISO]
-
-- **Transcription.py**: Processamento em chunks
-  - Evita travamento com áudios longos
-  - Processa em chunks de 30 minutos
-  - Mais estável em CPU
-
-#### 📚 Documentação
-- **README.md**: Documentação completa do projeto
-- **INSTALLATION.md**: Guia de instalação passo a passo
-- **USAGE.md**: Como usar todas as funcionalidades
-- **CONFIGURATION.md**: Configuração e personalização
-- **ARCHITECTURE.md**: Como funciona internamente
-- **GUIA_COMPLETO_V2.md**: Guia completo em português
-
-#### 🛠️ Infraestrutura
-- **.gitignore**: Ignora .env, outputs, profiles
-- **requirements.txt**: Lista de dependências
-- **.env.example**: Template de configuração
-
-### 📊 Melhorias de Performance
-- Taxa de aprovação: 50% → 70%+ após 3 lives
-- Detecção de memes: 80%+ de precisão
-- Score mais inteligente (até 30+ pontos)
-- Aprendizado contínuo por perfil
+- ClipSelector V2 com priorização de memes
+- ContextAnalyzer com GPT-4
+- AudioAnalyzer com detecção de risadas
+- Pipeline V2 profissional
 
 ---
 
-## [1.0.0] - 2026-02-26
+## [1.0.0] - 2026-02-15
 
-### 🎬 Lançamento Inicial
+### ✨ Primeira Versão Funcional
 
-#### ✨ Adicionado
-- Sistema básico de geração de shorts
-- Análise de áudio com energia e intensidade
-- Análise de contexto com GPT-4
-- Detecção de risadas na transcrição
-- Renderização vertical 1080x1920
-- ProfileManager básico
-- LanguageTasks personalizado (79 memes PT-BR)
+#### **Pipeline Básico**
+- Transcrição com Whisper (PT-BR)
+- Análise de áudio básica
+- Análise de contexto com GPT
+- Seleção de clips
+- Renderização vertical 9:16
 
-#### 🐛 Problemas Conhecidos
-- Shorts sem áudio (corrigido em v2.0.0)
-- Whisper travava com áudios longos (corrigido em v2.0.0)
-- Sem sistema de aprendizado (adicionado em v2.0.0)
-- Detecção de memes limitada (melhorado em v2.0.0)
+#### **Componentes**
+- AudioAnalyzer (básico)
+- ContextAnalyzer (básico)
+- ClipSelector (básico)
+- VerticalCropper (básico)
+- ProfileManager (básico)
 
----
+### 🐛 Problemas Conhecidos
 
-## [0.1.0] - 2026-01-23
-
-### 🚀 Versão Beta
-
-#### ✨ Adicionado
-- Protótipo inicial
-- Extração de segmentos
-- Transcrição básica com Whisper
-- Crop vertical básico
+- ❌ Shorts sem áudio (corrigido em V2.0.1)
+- ❌ Whisper trava em vídeos longos (corrigido em V2.0.2)
+- ❌ Sem aprendizado automático (adicionado em V2.0.0)
 
 ---
 
-## 📝 Notas
+## [0.1.0] - 2025-12-10
 
-### Versionamento
+### ✨ Protótipo Inicial
 
-- **Major (X.0.0)**: Mudanças incompatíveis na API
-- **Minor (0.X.0)**: Novas funcionalidades (compatível)
-- **Patch (0.0.X)**: Correções de bugs
+- Prova de conceito básica
+- Transcrição manual
+- Seleção manual de clips
+- Sem automação
 
-### Links
+---
 
-- [GitHub Releases](https://github.com/seu-usuario/AI-Youtube-Shorts-Generator/releases)
-- [Issues](https://github.com/seu-usuario/AI-Youtube-Shorts-Generator/issues)
-- [Pull Requests](https://github.com/seu-usuario/AI-Youtube-Shorts-Generator/pulls)
+## 📌 Legenda
+
+- 🚀 **Lançamento** - Nova versão major
+- ✨ **Adicionado** - Novas features
+- 🔧 **Melhorado** - Melhorias em features existentes
+- 🐛 **Corrigido** - Bug fixes
+- ⚠️ **Depreciado** - Features que serão removidas
+- ❌ **Removido** - Features removidas
+- 📚 **Documentação** - Mudanças na documentação
+
+---
+
+## 🔮 Próximas Versões
+
+### [3.1.0] - Planejado
+- Upload automático (YouTube/TikTok/Instagram)
+- Thumbnails com IA
+- Analytics integrado
+
+### [4.0.0] - Futuro
+- Multi-formato (16:9, 1:1, 9:16)
+- Face tracking avançado
+- B-roll automático
+- Música de fundo automática
