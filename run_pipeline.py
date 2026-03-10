@@ -129,7 +129,8 @@ def main():
     
     # Validar transcrição
     validator = TranscriptionValidator()
-    quality_score = validator.validate(transcription)
+    validation_result = validator.validate(transcription)
+    quality_score = validation_result.get('quality_score', 0)
     print(f"   📊 Qualidade da transcrição: {quality_score}/100")
     
     if quality_score < 50:
