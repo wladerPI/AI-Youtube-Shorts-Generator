@@ -1,4 +1,4 @@
-# run_pipeline_V3.py
+# run_pipeline.py
 """
 =============================================================================
 PIPELINE V3 - SISTEMA COMPLETO INTEGRADO
@@ -9,9 +9,9 @@ WORKFLOW:
 2. Análise (Áudio + Contexto + Memes)
 3. Seleção de clips
 4. Extração de segmentos
-5. OTIMIZAÇÃO (Remove silêncios + Acelera) ← NOVO
-6. RENDERIZAÇÃO (Com movimento de câmera) ← MELHORADO
-7. LEGENDAS (.srt + .ass) ← NOVO
+5. OTIMIZAÇÃO (Remove silêncios + Acelera)
+6. RENDERIZAÇÃO (Com movimento de câmera)
+7. LEGENDAS (.srt + .ass)
 
 =============================================================================
 """
@@ -21,14 +21,14 @@ import argparse
 from pathlib import Path
 from datetime import datetime
 
-# Importar componentes V3
+# Importar componentes V3 (IMPORTS CORRIGIDOS!)
 from Components.Transcription import transcribe_audio
 from Components.AudioAnalyzer import AudioAnalyzer
 from Components.ContextAnalyzer import ContextAnalyzer
 from Components.MemeScorer import MemeScorer
-from Components.ClipSelector_V2 import ClipSelector
+from Components.ClipSelector import ClipSelector
 from Components.TranscriptionValidator import TranscriptionValidator
-from Components.ProfileManager_V3 import ProfileManagerV3
+from Components.ProfileManager import ProfileManagerV3
 from Components.VideoOptimizer import VideoOptimizer
 from Components.SubtitleGenerator import SubtitleGenerator
 from Render.SmartCropper import SmartCropper

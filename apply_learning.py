@@ -1,45 +1,70 @@
 # apply_learning.py
 """
-Script simples para aplicar aprendizado de reviews ao perfil.
-
-USO:
-python apply_learning.py output/shorts_20260308_033405/reviews_lives_do_11closed.json
+Script para aplicar aprendizado manualmente ao perfil.
 """
 
-import sys
+import argparse
+import json
 from pathlib import Path
-from Components.ProfileManager_V2 import load_profile
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Uso: python apply_learning.py <arquivo_reviews.json>")
-        print("\nExemplo:")
-        print("  python apply_learning.py output/shorts_20260308_033405/reviews_lives_do_11closed.json")
-        sys.exit(1)
+# IMPORT CORRIGIDO!
+from Components.ProfileManager import ProfileManagerV3
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Aplicar aprendizado ao perfil')
+    parser.add_argument('profile', type=str, help='Nome do perfil')
+    parser.add_argument('--review-file', type=str, help='Arquivo JSON com resultados da revisão')
+    parser.add_argument('--show-stats', action='store_true', help='Mostrar estatísticas do perfil')
     
-    reviews_file = Path(sys.argv[1])
+    args = parser.parse_args()
     
-    if not reviews_file.exists():
-        print(f"❌ Arquivo não encontrado: {reviews_file}")
-        sys.exit(1)
+    manager = ProfileManagerV3()
     
-    # Extrair nome do perfil do arquivo
-    profile_name = reviews_file.stem.replace('reviews_', '')
+    if args.show_stats:
+        # Mostrar estatísticas
+        profile = manager.load_profile(args.profile)
+        
+        print("=" * 70)
+        print(f"📊 ESTATÍSTICAS DO PERFIL: {args.profile}")
+        print("=" * 70)
+        print(f"\n🎯 Threshold atual: {profile['thresholds']['min_score']:.1f}")
+        print(f"\n📈 Histórico:")
+        print(f"   Total de reviews: {profile['learning']['total_reviews']}")
+        print(f"   Aprovados: {profile['learning']['approved']}")
+        print(f"   Rejeitados: {profile['learning']['rejected']}")
+        print(f"   Taxa de aprovação: {profile['learning']['approval_rate']:.1f}%")
+        
+        if profile['learning']['rejection_reasons']:
+            print(f"\n❌ Motivos de rejeição:")
+            for reason, count in profile['learning']['rejection_reasons'].items():
+                print(f"   {reason}: {count}")
+        
+        if profile['learning']['adjustments_history']:
+            print(f"\n⚙️  Histórico de ajustes:")
+            for adj in profile['learning']['adjustments_history'][-5:]:  # Últimos 5
+                print(f"   {adj['date'][:10]} → {adj['old_threshold']:.1f} para {adj['new_threshold']:.1f} (taxa: {adj['approval_rate']:.1f}%)")
+        
+        print("=" * 70)
     
-    print(f"📚 Aplicando aprendizado...")
-    print(f"   Arquivo: {reviews_file.name}")
-    print(f"   Perfil: {profile_name}")
-    print()
+    elif args.review_file:
+        # Carregar arquivo de revisão
+        review_file = Path(args.review_file)
+        
+        if not review_file.exists():
+            print(f"❌ Arquivo não encontrado: {review_file}")
+            return
+        
+        with open(review_file, 'r', encoding='utf-8') as f:
+            review_results = json.load(f)
+        
+        print(f"📊 Aplicando aprendizado de {len(review_results)} revisões...")
+        manager.learn_from_review(args.profile, review_results)
+        print("✅ Perfil atualizado!")
     
-    # Carregar perfil e aprender
-    profile = load_profile(profile_name)
-    profile.learn_from_reviews(reviews_file)
-    
-    print()
-    print("=" * 70)
-    profile.print_statistics()
-    print("=" * 70)
-    
-    print("\n✅ Aprendizado aplicado com sucesso!")
-    print(f"\n📝 PRÓXIMA LIVE:")
-    print(f"   python run_pipeline_PROFESSIONAL_V2.py input/nova_live.mp4 10 --profile {profile_name}")
+    else:
+        print("⚠️  Use --show-stats para ver estatísticas ou --review-file para aplicar aprendizado")
+
+
+if __name__ == '__main__':
+    main()
