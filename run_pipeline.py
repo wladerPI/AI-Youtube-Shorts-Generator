@@ -125,7 +125,7 @@ def main():
     extract_audio(video_path, audio_path)
     
     transcription_file = output_dir / 'transcription.json'
-    transcription = transcribe_audio(str(audio_path), str(transcription_file))
+    transcription = transcribe_audio(str(audio_path))
     
     # Validar transcrição
     validator = TranscriptionValidator()
