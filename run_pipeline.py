@@ -144,8 +144,8 @@ def main():
     print("=" * 70)
     
     # Análise de áudio
-    audio_analyzer = AudioAnalyzer()
-    audio_features = audio_analyzer.analyze(str(audio_path))
+    audio_analyzer = AudioAnalyzer(str(audio_path))
+    audio_features = audio_analyzer.analyze()
     
     # Análise de contexto
     context_analyzer = ContextAnalyzer()
