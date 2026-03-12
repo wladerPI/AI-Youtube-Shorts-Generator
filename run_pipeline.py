@@ -1,27 +1,16 @@
 # run_pipeline.py
 """
-=============================================================================
-PIPELINE V3 - SISTEMA COMPLETO INTEGRADO
-=============================================================================
-
-WORKFLOW:
-1. Transcrição (Whisper PT-BR)
-2. Análise (Áudio + Contexto + Memes)
-3. Seleção de clips
-4. Extração de segmentos
-5. OTIMIZAÇÃO (Remove silêncios + Acelera)
-6. RENDERIZAÇÃO (Com movimento de câmera)
-7. LEGENDAS (.srt + .ass)
-
-=============================================================================
+Pipeline V3 - Sistema Completo Integrado
 """
 
 import sys
 import argparse
 from pathlib import Path
 from datetime import datetime
+import subprocess
+import json
 
-# Importar componentes V3 (IMPORTS CORRIGIDOS!)
+# Imports corrigidos
 from Components.Transcription import transcribe_audio
 from Components.AudioAnalyzer import AudioAnalyzer
 from Components.ContextAnalyzer import ContextAnalyzer
@@ -32,10 +21,6 @@ from Components.ProfileManager import ProfileManagerV3
 from Components.VideoOptimizer import VideoOptimizer
 from Components.SubtitleGenerator import SubtitleGenerator
 from Render.SmartCropper import SmartCropper
-
-# Importar utilitários
-import subprocess
-import json
 
 
 def extract_audio(video_path, audio_path):
@@ -57,6 +42,26 @@ def extract_audio(video_path, audio_path):
     print("   ✅ Áudio extraído!")
     
     return audio_path
+
+
+def get_video_duration(video_path):
+    """Obtém duração do vídeo em minutos."""
+    cmd = [
+        'ffprobe',
+        '-v', 'error',
+        '-show_entries', 'format=duration',
+        '-of', 'json',
+        str(video_path)
+    ]
+    
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    
+    try:
+        data = json.loads(result.stdout)
+        duration_sec = float(data['format']['duration'])
+        return duration_sec / 60.0  # Retorna em minutos
+    except:
+        return 0
 
 
 def extract_segment(video_path, start_time, duration, output_path):
@@ -114,6 +119,9 @@ def main():
     
     print(f"\n📁 Output: {output_dir}")
     
+    # Obter duração do vídeo
+    video_duration_min = get_video_duration(video_path)
+    
     # =========================================================================
     # PASSO 1: TRANSCRIÇÃO
     # =========================================================================
@@ -124,7 +132,6 @@ def main():
     audio_path = output_dir / 'audio.wav'
     extract_audio(video_path, audio_path)
     
-    transcription_file = output_dir / 'transcription.json'
     transcription = transcribe_audio(str(audio_path))
     
     # Validar transcrição
@@ -143,13 +150,13 @@ def main():
     print("PASSO 2/7: ANÁLISE")
     print("=" * 70)
     
-    # Análise de áudio
+    # Análise de áudio (AudioAnalyzer precisa do caminho na inicialização)
     audio_analyzer = AudioAnalyzer(str(audio_path))
     audio_features = audio_analyzer.analyze()
     
-    # Análise de contexto
-    context_analyzer = ContextAnalyzer()
-    context_analysis = context_analyzer.analyze(transcription)
+    # Análise de contexto (ContextAnalyzer precisa transcription e duration)
+    context_analyzer = ContextAnalyzer(transcription, video_duration_min)
+    context_analysis = context_analyzer.analyze()
     
     # Análise de memes
     meme_scorer = MemeScorer()
@@ -173,6 +180,10 @@ def main():
     )
     
     print(f"   ✅ {len(selected_clips)} clips selecionados")
+    
+    if not selected_clips:
+        print("\n❌ Nenhum clip selecionado! Tente diminuir o threshold.")
+        sys.exit(1)
     
     # =========================================================================
     # PASSOS 4-7: PROCESSAMENTO DE CADA CLIP
@@ -202,7 +213,7 @@ def main():
             segment_path
         )
         
-        # Otimizar
+        # Otimizar (se habilitado)
         if optimizer:
             print(f"\n[5/7] Otimizando...")
             optimized_path = output_dir / f'optimized_{i:03d}.mp4'
@@ -231,7 +242,7 @@ def main():
             from Render.VerticalCropper import render_vertical_crop
             render_vertical_crop(str(current_video), str(short_path))
         
-        # Gerar legendas
+        # Gerar legendas (se habilitado)
         if subtitle_gen and profile['subtitles']['enabled']:
             print(f"\n[7/7] Gerando legendas...")
             
