@@ -159,8 +159,20 @@ def main():
     context_analysis = context_analyzer.analyze()
     
     # Análise de memes
-    meme_scorer = MemeScorer()
-    meme_events = meme_scorer.score_memes(transcription)
+    # MemeScorer já está integrado no ContextAnalyzer
+    # Extrair eventos de memes dos highlights
+    meme_events = []
+    
+    if context_analysis and 'highlights' in context_analysis:
+        for highlight in context_analysis['highlights']:
+            if 'meme' in highlight.get('reason', '').lower():
+                meme_events.append({
+                    'start_time': highlight['start_time'],
+                    'duration': highlight.get('duration', 45),
+                    'score': highlight['score'],
+                    'meme_name': highlight.get('reason', 'unknown'),
+                    'transcription': highlight.get('transcription', [])
+                })
     
     print(f"   🎭 {len(meme_events)} eventos de memes detectados")
     
