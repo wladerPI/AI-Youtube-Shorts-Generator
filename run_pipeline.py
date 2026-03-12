@@ -10,11 +10,9 @@ from datetime import datetime
 import subprocess
 import json
 
-# Imports corrigidos
 from Components.Transcription import transcribe_audio
 from Components.AudioAnalyzer import AudioAnalyzer
 from Components.ContextAnalyzer import ContextAnalyzer
-from Components.MemeScorer import MemeScorer
 from Components.ClipSelector import ClipSelector
 from Components.TranscriptionValidator import TranscriptionValidator
 from Components.ProfileManager import ProfileManagerV3
@@ -59,7 +57,7 @@ def get_video_duration(video_path):
     try:
         data = json.loads(result.stdout)
         duration_sec = float(data['format']['duration'])
-        return duration_sec / 60.0  # Retorna em minutos
+        return duration_sec / 60.0
     except:
         return 0
 
@@ -92,7 +90,6 @@ def main():
     
     args = parser.parse_args()
     
-    # Validar entrada
     video_path = Path(args.video)
     if not video_path.exists():
         print(f"❌ Vídeo não encontrado: {video_path}")
@@ -106,20 +103,17 @@ def main():
     print(f"👤 Perfil: {args.profile}")
     print("=" * 70)
     
-    # Carregar perfil
     profile_manager = ProfileManagerV3()
     profile = profile_manager.load_profile(args.profile)
     
     print("\n" + profile_manager.get_config_summary(args.profile))
     
-    # Criar diretório de output
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = Path('output') / f'shorts_{timestamp}'
     output_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"\n📁 Output: {output_dir}")
     
-    # Obter duração do vídeo
     video_duration_min = get_video_duration(video_path)
     
     # =========================================================================
@@ -134,7 +128,6 @@ def main():
     
     transcription = transcribe_audio(str(audio_path))
     
-    # Validar transcrição
     validator = TranscriptionValidator()
     validation_result = validator.validate(transcription)
     quality_score = validation_result.get('quality_score', 0)
@@ -150,19 +143,16 @@ def main():
     print("PASSO 2/7: ANÁLISE")
     print("=" * 70)
     
-    # Análise de áudio (AudioAnalyzer precisa do caminho na inicialização)
     audio_analyzer = AudioAnalyzer(str(audio_path))
     audio_features = audio_analyzer.analyze()
     
-    # Análise de contexto (ContextAnalyzer precisa transcription e duration)
     context_analyzer = ContextAnalyzer(transcription, video_duration_min)
     context_analysis = context_analyzer.analyze()
     
-    # Análise de memes
-    # MemeScorer já está integrado no ContextAnalyzer
-    # Extrair eventos de memes dos highlights
+    # Criar lista de meme_events
     meme_events = []
     
+    # Extrair memes dos highlights
     if context_analysis and 'highlights' in context_analysis:
         for highlight in context_analysis['highlights']:
             if 'meme' in highlight.get('reason', '').lower():
@@ -194,14 +184,13 @@ def main():
     print(f"   ✅ {len(selected_clips)} clips selecionados")
     
     if not selected_clips:
-        print("\n❌ Nenhum clip selecionado! Tente diminuir o threshold.")
+        print("\n❌ Nenhum clip selecionado!")
         sys.exit(1)
     
     # =========================================================================
     # PASSOS 4-7: PROCESSAMENTO DE CADA CLIP
     # =========================================================================
     
-    # Inicializar componentes V3
     optimizer = VideoOptimizer(
         speed_factor=profile['video']['speed_factor']
     ) if not args.no_optimize else None
@@ -215,7 +204,6 @@ def main():
         print(f"PROCESSANDO CLIP {i}/{len(selected_clips)}")
         print("=" * 70)
         
-        # Extrair segmento
         print(f"\n[4/7] Extraindo segmento...")
         segment_path = output_dir / f'segment_{i:03d}.mp4'
         extract_segment(
@@ -225,7 +213,6 @@ def main():
             segment_path
         )
         
-        # Otimizar (se habilitado)
         if optimizer:
             print(f"\n[5/7] Otimizando...")
             optimized_path = output_dir / f'optimized_{i:03d}.mp4'
@@ -234,12 +221,10 @@ def main():
         else:
             current_video = segment_path
         
-        # Renderizar
         print(f"\n[6/7] Renderizando...")
         short_path = output_dir / f'short_{i:03d}.mp4'
         
         if cropper and profile['video']['camera_movement_enabled']:
-            # Com movimento de câmera
             meme_config_path = 'meme_templates/meme_config.json'
             cropper.render_short(
                 str(current_video),
@@ -250,11 +235,9 @@ def main():
                 )
             )
         else:
-            # Sem movimento (crop fixo)
             from Render.VerticalCropper import render_vertical_crop
             render_vertical_crop(str(current_video), str(short_path))
         
-        # Gerar legendas (se habilitado)
         if subtitle_gen and profile['subtitles']['enabled']:
             print(f"\n[7/7] Gerando legendas...")
             
@@ -273,7 +256,6 @@ def main():
                     style=profile['subtitles']['style']
                 )
         
-        # Limpar temporários
         if segment_path.exists() and segment_path != current_video:
             segment_path.unlink()
         if current_video != short_path and current_video.exists():
